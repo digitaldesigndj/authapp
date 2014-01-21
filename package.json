@@ -10,6 +10,10 @@
     "ejs": "*",
     "stylus": "*",
     "passport-google": "~0.3.0",
-    "passport-google-oauth": "~0.1.5"
+    "passport-google-oauth": "~0.1.5",
+    "docpad": "~6.60.3",
+    "docpad-plugin-marked": "~2.2.0",
+    "docpad-plugin-stylus": "~2.5.0",
+    "docpad-plugin-eco": "~2.0.3"
   }
 }

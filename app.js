@@ -7,20 +7,11 @@ var express = require('express');
 var http = require('http');
 var app = express();
 var server = http.createServer(app).listen(APPLICATION_PORT);
+// var util = require('util');
+var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 // Add our Application Middlewares
-// app.set('views', __dirname + '/views');
-// app.set('view engine', 'ejs');
-app.use(express.logger());
-app.use(express.cookieParser());
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(express.session({ secret: 'keyboard cat likes keyboard warmth' }));
-// Initialize Passport!  Also use passport.session() middleware, to support
-// persistent login sessions (recommended).
-app.use(passport.initialize());
-app.use(passport.session());
-// app.use(express.static(__dirname + '/public'));
 app.use(app.router);
 
 // Add DocPad to our Application
@@ -41,9 +32,18 @@ var docpadInstance = require('docpad').createInstance(docpadInstanceConfiguratio
     });
 });
 
-var util = require('util');
-var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+// app.set('views', __dirname + '/views');
+// app.set('view engine', 'ejs');
+app.use(express.logger());
+app.use(express.cookieParser());
+app.use(express.bodyParser());
+app.use(express.methodOverride());
+app.use(express.session({ secret: 'keyboard cat likes keyboard warmth' }));
+// Initialize Passport!  Also use passport.session() middleware, to support
+// persistent login sessions (recommended).
+app.use(passport.initialize());
+app.use(passport.session());
+// app.use(express.static(__dirname + '/public'));
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -83,17 +83,33 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-// @todo - replace with docpad stuff.
-app.get('/', function(req, res){
-  res.render('index', { user: req.user, title: 'Hyprtxt'});
+app.get('/alias', ensureAuthenticated, function(req, res, next) {
+  req.templateData = {
+    weDidSomeCustomRendering: true
+  };
+  var document = docpadInstance.getFile({
+    relativePath: 'index.html.md'
+  });
+  return docpadInstance.serveDocument({
+    document: document,
+    req: req,
+    res: res,
+    next: next
+  });
 });
 
-app.get('/account', ensureAuthenticated, function(req, res){
-  res.render('account', { user: req.user });
-});
+app.get('/root', function(req, res, next) { res.send('i has the root'); });
+// @todo - replace with docpad stuff.
+// app.get('/', function(req, res){
+//   res.render('index', { user: req.user, title: 'Hyprtxt'});
+// });
+
+// app.get('/account', ensureAuthenticated, function(req, res){
+//   res.render('account', { user: req.user });
+// });
 
 app.get('/login', function(req, res){
-  res.render('login', { user: req.user });
+  res.redirect('/auth/google');
 });
 
 // GET /auth/google
