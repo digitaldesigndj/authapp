@@ -1,12 +1,49 @@
-var express = require('express');
-var passport = require('passport');
-var util = require('util');
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-
-// API Access link for creating client ID and secret:
-// https://code.google.com/apis/console/
+var APPLICATION_PORT = process.env.PORT||3000;
 var GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 var GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
+// Create Server and Express Application
+var express = require('express');
+var http = require('http');
+var app = express();
+var server = http.createServer(app).listen(APPLICATION_PORT);
+
+// Add our Application Middlewares
+// app.set('views', __dirname + '/views');
+// app.set('view engine', 'ejs');
+app.use(express.logger());
+app.use(express.cookieParser());
+app.use(express.bodyParser());
+app.use(express.methodOverride());
+app.use(express.session({ secret: 'keyboard cat likes keyboard warmth' }));
+// Initialize Passport!  Also use passport.session() middleware, to support
+// persistent login sessions (recommended).
+app.use(passport.initialize());
+app.use(passport.session());
+// app.use(express.static(__dirname + '/public'));
+app.use(app.router);
+
+// Add DocPad to our Application
+var docpadInstanceConfiguration = {
+    // Give it our express application and http server
+    serverExpress: app,
+    serverHttp: server,
+
+    // Tell it not to load the standard middlewares (as we handled that above)
+    middlewareStandard: false
+};
+var docpadInstance = require('docpad').createInstance(docpadInstanceConfiguration, function(err){
+    if (err)  return console.log(err.stack);
+
+    // Tell DocPad to perform a generation, extend our server with its routes, and watch for changes
+    docpadInstance.action('generate server watch', function(err){
+        if (err)  return console.log(err.stack);
+    });
+});
+
+var util = require('util');
+var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -46,24 +83,7 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-var express = require("express");
-var app = express();
-
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-app.use(express.logger());
-app.use(express.cookieParser());
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(express.session({ secret: 'keyboard cat likes keyboard warmth' }));
-// Initialize Passport!  Also use passport.session() middleware, to support
-// persistent login sessions (recommended).
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(app.router);
-app.use(express.static(__dirname + '/public'));
-
-
+// @todo - replace with docpad stuff.
 app.get('/', function(req, res){
   res.render('index', { user: req.user, title: 'Hyprtxt'});
 });
@@ -104,10 +124,6 @@ app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
-
-var application_port = process.env.PORT||3000;
-app.listen(application_port);
-console.log('listening on port ' + application_port);
 
 
 // Simple route middleware to ensure user is authenticated.
