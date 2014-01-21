@@ -26,9 +26,6 @@
 
 	<div class="content">
 		<%- @content %>
-		<% if page.weDidSomeCustomRendering: %>
-			YOU ARE LOGGED IN>?
-		<% end %>
 	</div>
 
 <div class="navigation">
