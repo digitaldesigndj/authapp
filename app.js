@@ -49,7 +49,7 @@ passport.use(new GoogleStrategy({
 		console.log( done );
 		console.log( identifier );
 		console.log( user );
-		done(err, user);
+		done( user );
 	}
 ));
 
