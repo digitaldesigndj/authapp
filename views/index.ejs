@@ -4,12 +4,12 @@
 		<title><%= title %></title>
 		<link rel='stylesheet' href='/stylesheets/style.css' />
 	</head>
-	<h1>HYPRTXT</h1>
-<% if (!user) { %>
-	<h2>Welcome! Please <a href="/auth/google">Login with Google</a></h2>
-<% } else { %>
-	<h2>Hello, <%= user.displayName %>.</h2>
-<% } %>
+	<h1><%= title %></h1>
+	<% if (!user) { %>
+		<h2>Welcome! Please <a href="/auth/google">Login with Google</a></h2>
+	<% } else { %>
+		<h2>Hello, <%= user.displayName %>.</h2>
+	<% } %>
 	<p>Websites, Applications, Solutions</p>
 	<p>Contact: <a href="mailto:tdy721@gmail.com">Taylor Young</a></p>
 	<hr />
