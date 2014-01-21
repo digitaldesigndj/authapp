@@ -28,30 +28,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+	app.use(express.errorHandler());
 }
 
 app.get('/', routes.index);
 app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+	console.log('Express server listening on port ' + app.get('port'));
 });
 
 var passport = require('passport')
-  , GoogleStrategy = require('passport-google').Strategy;
+	, GoogleStrategy = require('passport-google').Strategy;
 
 passport.use(new GoogleStrategy({
-    returnURL: 'http://new.boundstar.com/auth/google/return',
-    realm: 'http://new.boundstar.com/'
-  },
-  function(identifier, profile, done) {
-  	console.log( done );
-    User.findOrCreate({ openId: identifier }, function(err, user) {
-    	console.log( user );
-      done(err, user);
-    });
-  }
+		returnURL: 'http://new.boundstar.com/auth/google/return',
+		realm: 'http://new.boundstar.com/'
+	},
+	function(identifier, profile, done) {
+		console.log( done );
+		console.log( identifier );
+		console.log( user );
+		done(err, user);
+	}
 ));
 
 app.get('/auth/google', passport.authenticate('google'));
@@ -60,5 +59,5 @@ app.get('/auth/google', passport.authenticate('google'));
 // the process by verifying the assertion.  If valid, the user will be
 // logged in.  Otherwise, authentication has failed.
 app.get('/auth/google/return', 
-  passport.authenticate('google', { successRedirect: '/',
-                                    failureRedirect: '/login' }));
+	passport.authenticate('google', { successRedirect: '/',
+																		failureRedirect: '/login' }));
