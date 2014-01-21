@@ -1,3 +1,5 @@
+export GOOGLE_CLIENT_ID=651753309329-j2ramaetop7idpv857cpcvnv4c62aqj8.apps.googleusercontent.com;
+export GOOGLE_CLIENT_SECRET=cjIOhz0XWzsJfdTc3ERyV2v6;
 
 var express = require('express');
 var passport = require('passport');
@@ -6,9 +8,8 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 // API Access link for creating client ID and secret:
 // https://code.google.com/apis/console/
-var GOOGLE_CLIENT_ID = "651753309329-j2ramaetop7idpv857cpcvnv4c62aqj8.apps.googleusercontent.com";
-var GOOGLE_CLIENT_SECRET = "cjIOhz0XWzsJfdTc3ERyV2v6";
-
+var GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+var GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -33,7 +34,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://new.boundstar.com/auth/google/callback"
+    callbackURL: "http://hyprtxt.com/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
@@ -112,7 +113,9 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-app.listen(3000);
+var application_port = process.env.PORT||3000;
+app.listen(application_port);
+console.log('listening on port ' + application_port);
 
 
 // Simple route middleware to ensure user is authenticated.

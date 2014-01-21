@@ -1,6 +1,6 @@
 players.json
 players_list.json
-archive/
-
-node_modules/
-out/
+archive
+secret
+node_modules
+out
