@@ -1,6 +1,3 @@
-export GOOGLE_CLIENT_ID=651753309329-j2ramaetop7idpv857cpcvnv4c62aqj8.apps.googleusercontent.com;
-export GOOGLE_CLIENT_SECRET=cjIOhz0XWzsJfdTc3ERyV2v6;
-
 var express = require('express');
 var passport = require('passport');
 var util = require('util');
@@ -49,27 +46,22 @@ passport.use(new GoogleStrategy({
   }
 ));
 
+var express = require("express");
+var app = express();
 
-
-
-var app = express.createServer();
-
-// configure Express
-app.configure(function() {
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'ejs');
-  app.use(express.logger());
-  app.use(express.cookieParser());
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.session({ secret: 'keyboard cat likes keyboard warmth' }));
-  // Initialize Passport!  Also use passport.session() middleware, to support
-  // persistent login sessions (recommended).
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
-});
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.use(express.logger());
+app.use(express.cookieParser());
+app.use(express.bodyParser());
+app.use(express.methodOverride());
+app.use(express.session({ secret: 'keyboard cat likes keyboard warmth' }));
+// Initialize Passport!  Also use passport.session() middleware, to support
+// persistent login sessions (recommended).
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(app.router);
+app.use(express.static(__dirname + '/public'));
 
 
 app.get('/', function(req, res){
@@ -91,7 +83,7 @@ app.get('/login', function(req, res){
 //   will redirect the user back to this application at /auth/google/callback
 app.get('/auth/google',
   passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
-                                            'https://www.googleapis.com/auth/userinfo.email'] }),
+    'https://www.googleapis.com/auth/userinfo.email'] }),
   function(req, res){
     // The request will be redirected to Google for authentication, so this
     // function will not be called.
