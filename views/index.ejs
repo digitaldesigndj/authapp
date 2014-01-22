@@ -1,24 +1,18 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title><%= title %></title>
-		<link rel='stylesheet' href='/stylesheets/style.css' />
-	</head>
-	<body>
-		<h1><%= title %></h1>
-		<p>Websites, Applications, Solutions</p>
-		<p>Contact: <a href="mailto:tdy721@gmail.com">Taylor Young</a></p>
-		<hr />
-		<h3>Work</h3>
-		<ul>
-			<li><a href="http://standishsalongoods.com">Standish Salon Goods</a> - 3DCart Theme</li>
-			<li><a href="http://boundstar.com">BoundStar</a> -  StarBound Game Server + Website</li>
-		</ul>
-		<hr />
-	<% if (!user) { %>
-		<h3>Welcome! Please <a href="/auth/google">Login with Google</a></h3>
-	<% } else { %>
-		<h3>Hello, <%= user.displayName %>.</h3>
-	<% } %>
-	</body>
-</html>
+<% include head %>
+	<!-- <link rel='stylesheet' href='/stylesheets/style.css' /> -->
+	<h1><%= title %></h1>
+	<p>Websites, Applications, Solutions</p>
+	<p>Contact: <a href="mailto:tdy721@gmail.com">Taylor Young</a></p>
+	<hr />
+	<h3>Work</h3>
+	<ul>
+		<li><a href="http://standishsalongoods.com">Standish Salon Goods</a> - 3DCart Theme</li>
+		<li><a href="http://boundstar.com">BoundStar</a> -  StarBound Game Server + Website</li>
+	</ul>
+	<hr />
+<% if (!user) { %>
+	<h3>Welcome! Please <a href="/auth/google">Login with Google</a></h3>
+<% } else { %>
+	<h3>Hello, <%= user.displayName %>.</h3>
+<% } %>
+<% include foot %>

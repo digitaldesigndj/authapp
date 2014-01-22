@@ -6,14 +6,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="BoundStar, a StarBound Server!">
 	<meta name="author" content="Taylor Young">
-
-	<%- @getBlock("meta").toHTML() %>
-	<title><%= @document.title %> | Boundstar</title>
+	<meta name="generator" content="DocPad v6.60.3" />
+	<title>Home | Boundstar</title>
 
 	<link href="assets/css/font-awesome.min.css" rel="stylesheet">
 	<link href="assets/css/main.css" rel="stylesheet">
 	<link href="starbound-font/starbound-font.css" rel="stylesheet">
-	<%- @getBlock('styles').add(@styles).toHTML() %>
+	
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
 	  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -21,24 +20,8 @@
 	<![endif]-->
 </head>
 <body>
-	<div class="logo">
+<!-- 	<div class="logo">
 		<a href="/"><img src="/assets/img/logo.png" alt="" /></a>
-	</div>
+	</div> -->
 
 	<div class="content">
-		<%- @content %>
-		<%= templateData.weDidSomeCustomRendering %>
-	</div>
-
-<div class="navigation">
-	<% for page in @getCollection("html").toJSON(): %>
-		<% if page.navigation isnt false: %>
-			<a href="<%= page.url %>" class="<%= if page.id is @document.id then 'active' else 'inactive' %>"><%= page.title %></a>
-		<% end %>
-	<% end %>
-<!-- 	<a href="/">Home</a>
-	<a href="/server.html">Commands</a> -->
-</div>
-	<%- @getBlock('scripts').add(@scripts).toHTML() %>
-</body>
-</html>

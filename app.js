@@ -1,6 +1,7 @@
 var APPLICATION_PORT = process.env.PORT||3000;
 var GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 var GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+var GOOGLE_CALLBACK_URL = procress.env.GOOGLE_CALLBACK_URL||'http://hyprtxt.com/auth/google/callback';
 
 // Create Server and Express Application
 var express = require('express');
@@ -8,8 +9,27 @@ var http = require('http');
 var app = express();
 var server = http.createServer(app).listen(APPLICATION_PORT);
 // var util = require('util');
+
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+
+
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+
+// Initialize Passport!  Also use passport.session() middleware, to support
+// persistent login sessions (recommended).
+app.use(passport.initialize());
+app.use(passport.session());
+
+// app.use(express.static(__dirname + '/public'));
+
+app.use(express.logger());
+app.use(express.cookieParser());
+app.use(express.bodyParser());
+app.use(express.methodOverride());
+app.use(express.session({ secret: 'keyboard cat likes keyboard warmth' }));
+
 
 // Add our Application Middlewares
 app.use(app.router);
@@ -32,18 +52,7 @@ var docpadInstance = require('docpad').createInstance(docpadInstanceConfiguratio
     });
 });
 
-// app.set('views', __dirname + '/views');
-// app.set('view engine', 'ejs');
-app.use(express.logger());
-app.use(express.cookieParser());
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(express.session({ secret: 'keyboard cat likes keyboard warmth' }));
-// Initialize Passport!  Also use passport.session() middleware, to support
-// persistent login sessions (recommended).
-app.use(passport.initialize());
-app.use(passport.session());
-// app.use(express.static(__dirname + '/public'));
+
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -68,7 +77,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://hyprtxt.com/auth/google/callback"
+    callbackURL: GOOGLE_CALLBACK_URL
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
@@ -83,26 +92,29 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-app.get('/alias', ensureAuthenticated, function(req, res, next) {
+app.get('/alias', function(req, res, next) {
   req.templateData = {
     weDidSomeCustomRendering: true
   };
   var document = docpadInstance.getFile({
     relativePath: 'index.html.md'
   });
+  console.log( document );
   return docpadInstance.serveDocument({
-    document: document,
-    req: req,
-    res: res,
-    next: next
+    'document': document,
+    'req': req,
+    'res': res,
+    'next': next
   });
 });
 
 app.get('/root', function(req, res, next) { res.send('i has the root'); });
-// @todo - replace with docpad stuff.
-// app.get('/', function(req, res){
-//   res.render('index', { user: req.user, title: 'Hyprtxt'});
-// });
+
+// @todo - replace with docpad stuff. OR NOT
+
+app.get('/', function(req, res){
+  res.render('index', { user: req.user, title: 'Hyprtxt'});
+});
 
 // app.get('/account', ensureAuthenticated, function(req, res){
 //   res.render('account', { user: req.user });
@@ -112,14 +124,21 @@ app.get('/login', function(req, res){
   res.redirect('/auth/google');
 });
 
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
 // GET /auth/google
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request.  The first step in Google authentication will involve
 //   redirecting the user to google.com.  After authorization, Google
 //   will redirect the user back to this application at /auth/google/callback
 app.get('/auth/google',
-  passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
-    'https://www.googleapis.com/auth/userinfo.email'] }),
+  passport.authenticate('google', { scope: [
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/userinfo.email'
+  ] }),
   function(req, res){
     // The request will be redirected to Google for authentication, so this
     // function will not be called.
@@ -135,12 +154,6 @@ app.get('/auth/google/callback',
   function(req, res) {
     res.redirect('/');
   });
-
-app.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/');
-});
-
 
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If
