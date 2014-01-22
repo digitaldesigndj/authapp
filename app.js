@@ -92,21 +92,25 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-app.get('/alias', function(req, res, next) {
-  req.templateData = {
-    weDidSomeCustomRendering: true
-  };
-  var document = docpadInstance.getFile({
-    relativePath: 'index.html.md'
-  });
-  console.log( document );
-  return docpadInstance.serveDocument({
-    'document': document,
-    'req': req,
-    'res': res,
-    'next': next
-  });
+app.get('/secure', ensureAuthenticated, function(req, res) {
+  res.render('index', { user: req.user, title: 'Hyprtxt'});
 });
+
+// app.get('/secure', function(req, res, next) {
+//   req.templateData = {
+//     weDidSomeCustomRendering: true
+//   };
+//   var document = docpadInstance.getFile({
+//     relativePath: 'index.html.md'
+//   });
+//   console.log( document );
+//   return docpadInstance.serveDocument({
+//     'document': document,
+//     'req': req,
+//     'res': res,
+//     'next': next
+//   });
+// });
 
 app.get('/root', function(req, res, next) { res.send('i has the root'); });
 
@@ -152,7 +156,7 @@ app.get('/auth/google',
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/');
+    res.redirect('/secure');
   });
 
 // Simple route middleware to ensure user is authenticated.
