@@ -126,7 +126,8 @@ app.get('/secure', ensureAuthenticated, function(req, res) {
 // });
 
 app.get('/login', function(req, res){
-  res.redirect('/auth/google');
+  res.send('<a href="/auth/google">Login with Google</a>');
+  // res.redirect('/auth/google');
 });
 
 app.get('/logout', function(req, res){
