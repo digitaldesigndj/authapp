@@ -1,7 +1,7 @@
 var APPLICATION_PORT = process.env.PORT||3000;
 var GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 var GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-var GOOGLE_CALLBACK_URL = procress.env.GOOGLE_CALLBACK_URL||'http://hyprtxt.com/auth/google/callback';
+var GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL||'http://hyprtxt.com/auth/google/callback';
 
 // Create Server and Express Application
 var express = require('express');
