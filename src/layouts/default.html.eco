@@ -27,7 +27,6 @@
 
 	<div class="content">
 		<%- @content %>
-		<%= templateData.weDidSomeCustomRendering %>
 	</div>
 
 <div class="navigation">
