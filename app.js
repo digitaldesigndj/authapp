@@ -92,10 +92,6 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-app.get('/secure', ensureAuthenticated, function(req, res) {
-  res.render('index', { user: req.user, title: 'Hyprtxt'});
-});
-
 // app.get('/secure', function(req, res, next) {
 //   req.templateData = {
 //     weDidSomeCustomRendering: true
@@ -118,6 +114,11 @@ app.get('/root', function(req, res, next) { res.send('i has the root'); });
 
 app.get('/', function(req, res){
   res.render('index', { user: req.user, title: 'Hyprtxt'});
+});
+
+app.get('/secure', ensureAuthenticated, function(req, res) {
+  res.send("Thanks for thrying that out " + req.user);
+  //res.render('index', { user: req.user, title: 'Hyprtxt'});
 });
 
 // app.get('/account', ensureAuthenticated, function(req, res){
